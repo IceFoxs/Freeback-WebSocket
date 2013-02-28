@@ -71,7 +71,7 @@ public class FreebackMain {
 		String listener = "freeback server connect failed";
 		if (connected) {
 			listener = String.format("listener : %s:%d", configure.getServerHost(), configure.getServerPort());
-			MongoHelper.sharedInstance();
+//			MongoHelper.sharedInstance();
 		}
 		System.out.println(listener);
 	}

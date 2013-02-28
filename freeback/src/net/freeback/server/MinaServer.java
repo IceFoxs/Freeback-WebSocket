@@ -63,7 +63,8 @@ public class MinaServer {
 		filter.setSessionIdleLogLevel(LogLevel.DEBUG);
 		filter.setSessionOpenedLogLevel(LogLevel.DEBUG);
 		acceptor.getFilterChain().addLast("logger", filter);
-		acceptor.setHandler(new MinaHandler(maxConnection));
+		//acceptor.setHandler(new MinaHandler(maxConnection));
+		acceptor.setHandler(new WebSocketIoHandler());
 
 		acceptor.bind(new InetSocketAddress(configure.getServerHost(), configure.getServerPort()));
 		return true;
