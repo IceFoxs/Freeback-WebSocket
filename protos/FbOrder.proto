@@ -1,0 +1,37 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries.store";
+option java_outer_classname = "FBOrderProto";
+
+import "FBProduct.proto";
+
+message FBOrder {
+    required string                 Code            = 1;
+    required string                 Store           = 2;
+    required string                 User            = 3;   //购买人 无账户的均为: -1
+    required float                  Adjust          = 5;   //调整
+    required OrderState             State           = 8; 
+    repeated FBOrderItem            Items           = 11;  //订单产品
+    required string                 Address         = 12;
+    optional string                 Remark          = 14;
+    required string                 LastModified    = 13;  //最后变更时间
+    required Delivery               Dispatch        = 15;
+}
+
+message FBOrderItem {
+    required string                 Code                = 1; 
+    required FBProduct              Product             = 2;
+    required int32                  Amount              = 3 [default = 1];
+}
+
+enum OrderState { 
+    Making      = 1;        //配货
+    OnRoute     = 2;        //配送
+    Finished    = 3;        //完成
+} 
+
+enum Delivery
+{
+    Self        = 1;        //自提
+    Home        = 2;        //送货上门
+}

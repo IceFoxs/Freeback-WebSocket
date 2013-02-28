@@ -1,0 +1,10 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries";
+option java_outer_classname = "FBMasterFilesProto";
+  
+message FBMasterFiles
+{ 
+    required string     master        = 1;
+    repeated string     Names         = 2; 
+}

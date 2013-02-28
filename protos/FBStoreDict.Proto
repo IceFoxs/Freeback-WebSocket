@@ -1,0 +1,17 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries.store";
+option java_outer_classname = "FBStoreDictProto";
+
+import "FBSystem.proto";
+
+message FBStoreDict
+{
+	required string 		    Code				     = 1;    //GridFS id 唯一标记
+  	required string             Store              		 = 2;
+	required int32 		        VersionValue       		 = 3;
+	repeated FBIndustry         Industires  			 = 4;
+	repeated FBCategory         Categories 				 = 5;
+	repeated FBDimension        Dimensions  			 = 6;
+}
+

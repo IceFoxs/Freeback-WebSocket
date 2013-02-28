@@ -1,0 +1,61 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries";
+option java_outer_classname = "FBMessageProto";
+
+message FBMessage
+{
+	required Header header          = 1;
+	optional bytes  bodies          = 2;
+}
+
+
+message Header
+{
+	required Notify notify 			= 1;
+	required Action action 			= 2 [default = None]; 
+    required int32  codecVersion 	= 3;
+    optional string sender 			= 4;
+    optional string receiver 		= 5;
+    optional string sendtime 		= 6;
+    optional bool   response        = 7;                  // true : success  false : failure
+    optional string text			= 8; 
+} 
+
+enum Notify {
+    Unknown             = 0x100;
+    ServerError         = 0x101; 
+    
+    SystemConnect       = 0x001; 
+    SystemDisConnect    = 0x002; 
+    SystemData          = 0x003;
+    SystemId            = 0x004;     
+    
+    UserRegister        = 0x010;              
+    UserLogin           = 0x011;
+    UserVerify          = 0x012;
+    UserLogout          = 0x013;
+    UserInfo            = 0x014;
+     
+    PhotoUser           = 0x020;
+    PhotoStore          = 0x021;
+    PhotoProduct        = 0x022;
+
+    StoreSave           = 0x050;
+    StoreFindById       = 0x051;
+    StoreFindByBoss     = 0x052;
+    StoreProduct        = 0x053;
+    StoreDict           = 0x054;
+
+    OrderCreate         = 0x100;
+    OrderAddProduct     = 0x101;
+    OrderChecked        = 0x102;
+    OrderUnChecked      = 0x103;
+}
+
+enum Action {
+    None        = 0;
+    Find        = 1;
+    Save        = 2;
+    Remove      = 3;
+} 

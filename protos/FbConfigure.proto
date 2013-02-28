@@ -1,0 +1,26 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries";
+option java_outer_classname = "FBConfigureProto";
+
+message FBConfigure
+{
+	required int32 VersionCodec             = 1;
+	required int32 VersionSystem			= 2;
+	required int32 ObjectIdLength           = 16;
+	
+	required string MongoHost               = 5;
+	required int32  MongoPort               = 6;
+	required string FreebackDB              = 7;
+	required string GridFSDB                = 8;
+	required string FileUrlPrefix           = 9;
+	required string AuthUser                = 17;
+	required string AuthPassword            = 18;
+	
+	required string ServerHost              = 10;
+	required int32  ServerPort              = 11;
+	required int32  ServerMaxProcessor      = 12;
+	required int32  ServerMaxConnection     = 13;
+	required int32  ServerMaxReadBufferSize = 14;
+	required int32  ServerMinReadBufferSize = 15;
+}

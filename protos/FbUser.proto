@@ -1,0 +1,20 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries";
+option java_outer_classname = "FBUserProto";
+
+import "FBRegion.proto";
+
+message FBUser {
+	optional string				Code            = 1;
+	required string 			Username        = 2;
+	optional string 			Passwd          = 3;
+	optional string 			Nick            = 4;
+	repeated string 			Phones 			= 5;    	//电话
+	optional string 			Photo 			= 6;    	//头像
+	optional int32 				sexual          = 7;
+	optional string 			email	        = 8;
+    optional FBProvince 	    Province        = 9;
+    repeated string 			Addresses 		= 10;
+	optional string 			Remark          = 12;  
+} 	

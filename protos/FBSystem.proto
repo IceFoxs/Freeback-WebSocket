@@ -1,0 +1,37 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries";
+option java_outer_classname = "FBSystemProto";
+
+import "FBRegion.proto"; 
+
+message FBSystem
+{
+	required int32 				      VersionValue       = 1;
+  required FBRegion           Region             = 2; 
+	repeated FBIndustry         Industires  			 = 4;
+	repeated FBCategory         Categories 				 = 5;
+	repeated FBDimension        Dimensions  			 = 6;
+}
+
+//行业信息
+message FBIndustry
+{
+   required int32   Code    = 1; 
+   required string  Name    = 2;
+}
+
+//产品分类
+message FBCategory {
+   required int32   Code    = 1; 
+   required int32   Order   = 2;            //用于显示顺序
+   required string  Name    = 3;
+   required int32   State   = 4;            //0: 无效 1: 有效  
+}
+
+//产品规格
+message FBDimension
+{
+    required string     Group         = 1;
+    repeated string     Dimension     = 2;  
+}

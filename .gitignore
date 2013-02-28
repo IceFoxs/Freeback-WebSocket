@@ -1,6 +1,8 @@
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
+*.DS_Store
+out
+.idea
+reference
+mongodb
+log
+files
+gitcmt.sh

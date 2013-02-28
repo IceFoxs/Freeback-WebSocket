@@ -1,0 +1,33 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries.store";
+option java_outer_classname = "FBProductProto";
+
+import "FBSystem.proto";
+
+message FBProducts {
+    required string              Code               = 1;
+    required string              Store              = 2;
+    repeated FBCategoryProduct   Products           = 3;
+}
+
+message FBCategoryProduct {
+    required int32               Category            = 1;
+    repeated FBProduct           Products            = 2;
+}
+
+message FBProduct {
+    required string                 Code                = 1;
+    repeated string                 Photos              = 2;
+    required string                 Name                = 3; 
+    required int32                  Order               = 4; 
+    repeated FBStock                Stocks              = 5;
+    optional string                 Description         = 6;
+    required string                 Modified            = 7;        //变更时间
+}
+
+message FBStock {
+    required string                 Dimension           = 1;
+    required float                  Price               = 2;
+    required int32                  Stocks              = 3;       //库存
+}

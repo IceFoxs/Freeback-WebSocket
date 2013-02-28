@@ -1,0 +1,27 @@
+package net.freeback;
+
+option java_package = "net.freeback.entries";
+option java_outer_classname = "FBRegionProto";
+
+message FBRegion {
+    repeated FBProvince provinces = 2;
+}
+
+message FBProvince{
+	optional int32 	Code 		= 2;
+	optional string Name		= 3;
+	optional int32 	DirectCity 	= 4;
+	repeated FBCity Cities 		= 5;
+}
+
+message FBCity{
+	required int32 Code = 1;
+	required string Name = 2; 
+	repeated FBArea Areas = 4;
+}
+
+message FBArea {
+	required int32 Code = 1;
+	required string Name = 2;
+}
+
