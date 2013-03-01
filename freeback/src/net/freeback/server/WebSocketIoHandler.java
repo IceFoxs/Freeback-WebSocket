@@ -26,66 +26,70 @@ public class WebSocketIoHandler extends IoHandlerAdapter {
     private static Logger LOGGER = LoggerFactory.getLogger(WebSocketIoHandler.class);
     
     Map<Long, IoSession> ioSessionMap = new HashMap<Long, IoSession>();
-    
-    public void messageReceived(IoSession session, Object message) throws Exception {
-		System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-    	IoBuffer buffer = (IoBuffer)message;
-    	
-    	byte[] b = new byte[buffer.limit()];  
-    	buffer.get(b); 
 
-    	Long sid = session.getId();
+	@Override
+	public void messageReceived(IoSession session, Object message) throws Exception {
+		IoBuffer buffer = (IoBuffer)message;
+		buffer.flip();
+		byte[] b = new byte[buffer.limit()];
+		buffer.get(b);
+		Long sid = session.getId();
+		if (!ioSessionMap.containsKey(sid)) {
+//			LOGGER.info("user %d,has been created" + sid);
+			ioSessionMap.put(sid, session);
 
-    	if (!ioSessionMap.containsKey(sid)) {
-    		LOGGER.info("user '{}',has been created" + sid);
-    		ioSessionMap.put(sid, session);
-    		
-        	String m = new String(buffer.array());
+			String m = new String(buffer.array());
 			String sss = getSecWebSocketAccept(m);
-			
+
 			buffer.clear();
 			buffer.put(sss.getBytes("utf-8"));
-			
+
 			buffer.flip();
 			session.write(buffer);
 			buffer.free();
-    	} else {
-    		String m = decode(b);
-    		LOGGER.info("from client is :" + m);
-        	buffer.clear();
+		} else {
+			String m = decode(b);
+			LOGGER.info("from client is :" + m);
+			buffer.clear();
 
-        	byte[] bb = encode(m);
+			byte[] bb = encode(m);
 
-        	buffer.put(bb);
-        	buffer.flip();
-        	
-        	synchronized (ioSessionMap) {
-            	Collection<IoSession> ioSessionSet = ioSessionMap.values();
-            	for (IoSession is : ioSessionSet) {
-    				if (is.isConnected()) {
-    					System.out.println("response message to " + is);
-    					is.write(buffer.duplicate());
-    				}
-        		}
-            }
-    		buffer.free();
-    	}
-    }
+			buffer.put(bb);
+			buffer.flip();
+
+			synchronized (ioSessionMap) {
+				Collection<IoSession> ioSessionSet = ioSessionMap.values();
+				for (IoSession is : ioSessionSet) {
+					if (is.isConnected()) {
+						System.out.println("response message to " + is);
+						is.write(buffer.duplicate());
+					}
+				}
+			}
+			buffer.free();
+		}
+	}
+
+
 
 	@Override
+	public void exceptionCaught(org.apache.mina.core.session.IoSession session, java.lang.Throwable cause)
+	{
+		System.out.println(cause.getMessage());
+		cause.printStackTrace();
+	}
+	@Override
 	public void sessionCreated(IoSession session) throws Exception {
-		System.out.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
 	}
 
     @Override
     public void sessionOpened(IoSession session) throws Exception {
-		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
         session.setAttribute(INDEX_KEY, 0);
     }
 
     @Override   
-    public void sessionIdle( IoSession session, IdleStatus status ) throws Exception {   
-        System.out.println( "IDLE " + session.getIdleCount( status ));   
+    public void sessionIdle( IoSession session, IdleStatus status ) throws Exception {
+        System.out.println( "IDLE " + session.getIdleCount( status ));
     } 
     
 	public static String getSecWebSocketAccept(String key) {

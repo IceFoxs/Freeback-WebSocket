@@ -11,6 +11,8 @@ import org.apache.mina.filter.codec.ProtocolDecoderOutput;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 
 public class FBDecoder extends CumulativeProtocolDecoder {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(FBDecoder.class);

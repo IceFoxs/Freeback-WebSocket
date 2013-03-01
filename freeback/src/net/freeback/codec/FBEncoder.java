@@ -6,6 +6,8 @@ import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolEncoderAdapter;
 import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 
+import java.nio.charset.Charset;
+
 public class FBEncoder extends ProtocolEncoderAdapter {
     private int mMaxBufferSize = 1024 * 100;
 
@@ -23,12 +25,5 @@ public class FBEncoder extends ProtocolEncoderAdapter {
         sendBuffer.put(buffer);
         sendBuffer.flip();
         out.write(sendBuffer);
-//        FbMessageProto.Header header = message.getHeader();
-//        out.write(IoBuffer.wrap(header.toByteArray()));
-//        System.out.println("Header message send to client successful");
-//        if (header.getLength() > 0) {
-//            out.write(IoBuffer.wrap(message.getBodies().toByteArray()));
-//            System.out.println("Body message send to client successful");
-//        }
     }
 }
