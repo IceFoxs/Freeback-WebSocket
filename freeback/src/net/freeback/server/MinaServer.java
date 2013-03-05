@@ -3,6 +3,7 @@ package net.freeback.server;
 import net.freeback.codec.FBCodecFactory;
 import net.freeback.codec.WebsocketFactory;
 import net.freeback.entries.FBConfigureProto;
+import net.freeback.websocket.WebSocketCodecFactory;
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.session.IoEventType;
 import org.apache.mina.core.session.IoSession;
@@ -53,7 +54,7 @@ public class MinaServer {
 		acceptor.getSessionConfig().setMaxReadBufferSize(maxBufferSize);
 		acceptor.getFilterChain().addLast("throttle", new ConnectionThrottleFilter(2000));
 		//acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new FBCodecFactory(maxBufferSize)));
-		acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new WebsocketFactory()));
+		acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new WebSocketCodecFactory()));
 		acceptor.getFilterChain().addLast("executor", new ExecutorFilter(eventTypes));
 		//日志
 		LoggingFilter filter = new LoggingFilter();

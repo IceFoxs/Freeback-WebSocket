@@ -17,81 +17,89 @@ import org.slf4j.LoggerFactory;
 
 /**
  * http://www.cnblogs.com/pctzhang/archive/2012/02/19/2358496.html
- * @author amu
  *
+ * @author amu
  */
 public class WebSocketIoHandler extends IoHandlerAdapter {
 
-    public static final String INDEX_KEY = WebSocketIoHandler.class.getName() + ".INDEX";
-    private static Logger LOGGER = LoggerFactory.getLogger(WebSocketIoHandler.class);
-    
-    Map<Long, IoSession> ioSessionMap = new HashMap<Long, IoSession>();
+	public static final String INDEX_KEY = WebSocketIoHandler.class.getName() + ".INDEX";
+	private static Logger LOGGER = LoggerFactory.getLogger(WebSocketIoHandler.class);
+
+	Map<Long, IoSession> ioSessionMap = new HashMap<Long, IoSession>();
 
 	@Override
 	public void messageReceived(IoSession session, Object message) throws Exception {
-		IoBuffer buffer = (IoBuffer)message;
-		buffer.flip();
+		IoBuffer buffer = (IoBuffer) message;
+
 		byte[] b = new byte[buffer.limit()];
 		buffer.get(b);
-		Long sid = session.getId();
-		if (!ioSessionMap.containsKey(sid)) {
-//			LOGGER.info("user %d,has been created" + sid);
-			ioSessionMap.put(sid, session);
 
-			String m = new String(buffer.array());
-			String sss = getSecWebSocketAccept(m);
+		String msg = new String(b);
+		System.out.println("from client is : " + msg);
 
-			buffer.clear();
-			buffer.put(sss.getBytes("utf-8"));
+		String m = decode(b);
+		LOGGER.info("Log from client is :" + m);
+		buffer.clear();
 
-			buffer.flip();
-			session.write(buffer);
-			buffer.free();
-		} else {
-			String m = decode(b);
-			LOGGER.info("from client is :" + m);
-			buffer.clear();
+		String toClient = "用于测试的数据";
+		byte[] bb = encode(toClient);
+		buffer.put(bb);
+		buffer.flip();
 
-			byte[] bb = encode(m);
+		session.write(buffer);
+		buffer.free();
+//		if (!ioSessionMap.containsKey(sid)) {
+//			LOGGER.info("user '{}',has been created" + sid);
+//			ioSessionMap.put(sid, session);
+//
+//			String m = new String(buffer.array());
+//			String sss = getSecWebSocketAccept(m);
+//
+//			buffer.clear();
+//			buffer.put(sss.getBytes("utf-8"));
+//
+//			buffer.flip();
+//			session.write(buffer);
+//			buffer.free();
+//		} else {
 
-			buffer.put(bb);
-			buffer.flip();
+//			session.write(buffer.duplicate());
 
-			synchronized (ioSessionMap) {
-				Collection<IoSession> ioSessionSet = ioSessionMap.values();
-				for (IoSession is : ioSessionSet) {
-					if (is.isConnected()) {
-						System.out.println("response message to " + is);
-						is.write(buffer.duplicate());
-					}
-				}
-			}
-			buffer.free();
-		}
+//			synchronized (ioSessionMap) {
+//				Collection<IoSession> ioSessionSet = ioSessionMap.values();
+//				for (IoSession is : ioSessionSet) {
+//					if (is.isConnected()) {
+//						System.out.println("response message to " + is);
+//						is.write(buffer.duplicate());
+//					}
+//				}
+//			}
+//		buffer.free();
+//		}
+
 	}
-
 
 
 	@Override
-	public void exceptionCaught(org.apache.mina.core.session.IoSession session, java.lang.Throwable cause)
-	{
+	public void exceptionCaught(org.apache.mina.core.session.IoSession session, java.lang.Throwable cause) {
 		System.out.println(cause.getMessage());
 		cause.printStackTrace();
 	}
+
 	@Override
 	public void sessionCreated(IoSession session) throws Exception {
 	}
 
-    @Override
-    public void sessionOpened(IoSession session) throws Exception {
-        session.setAttribute(INDEX_KEY, 0);
-    }
+	@Override
+	public void sessionOpened(IoSession session) throws Exception {
+		session.setAttribute(INDEX_KEY, 0);
+	}
 
-    @Override   
-    public void sessionIdle( IoSession session, IdleStatus status ) throws Exception {
-        System.out.println( "IDLE " + session.getIdleCount( status ));
-    } 
-    
+	@Override
+	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
+		System.out.println("IDLE " + session.getIdleCount(status));
+	}
+
 	public static String getSecWebSocketAccept(String key) {
 		String secKey = getSecWebSocketKey(key);
 
@@ -110,7 +118,7 @@ public class WebSocketIoHandler extends IoHandlerAdapter {
 				+ secKey + "\r\n\r\n";
 		return rtn;
 	}
-	
+
 	public static String getSecWebSocketKey(String req) {
 		Pattern p = Pattern.compile("^(Sec-WebSocket-Key:).+",
 				Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
@@ -156,7 +164,7 @@ public class WebSocketIoHandler extends IoHandlerAdapter {
 
 		// 计算非空位置
 		int lastStation = receivedDataBuffer.length - 1;
-		
+
 		// 利用掩码对org-data进行异或
 		int frame_masking_key = 1;
 		for (int i = 6; i <= lastStation; i++) {
@@ -212,7 +220,7 @@ public class WebSocketIoHandler extends IoHandlerAdapter {
 		for (int i = 0; i < msgByte.length; i++) {
 			result[i + masking_key_startIndex] = msgByte[i];
 		}
-		
+
 		return result;
 	}
 }
